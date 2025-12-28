@@ -22,6 +22,12 @@ function renderCounterButton(int $value): Renderable
 }
 ```
 
+### PHPStan
+
+If you're using [phpstan](https://phpstan.org/) (you should), you will also need to install
+[phpstan/extension-installer](https://packagist.org/packages/phpstan/extension-installer) so that
+the extension methods are automatically detected.
+
 ## License
 
 MIT
