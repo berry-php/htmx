@@ -1,6 +1,6 @@
 <?php
 
-namespace Berry\Html5;
+namespace Berry\Html;
 
 use Berry\Htmx\HxSwap;
 use Berry\Htmx\HxTarget;

@@ -2,10 +2,10 @@
 
 use Berry\Htmx\BerryHtmx;
 
-use function Berry\Html5\button;
-use function Berry\Html5\div;
-use function Berry\Html5\form;
-use function Berry\Html5\input;
+use function Berry\Html\button;
+use function Berry\Html\div;
+use function Berry\Html\form;
+use function Berry\Html\input;
 
 beforeAll(function () {
     BerryHtmx::install();

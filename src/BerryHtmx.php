@@ -2,8 +2,8 @@
 
 namespace Berry\Htmx;
 
-use Berry\Html5\HtmlTag;
-use Berry\Html5\HtmlVoidTag;
+use Berry\Html\HtmlTag;
+use Berry\Html\HtmlVoidTag;
 use ArgumentCountError;
 use Closure;
 use InvalidArgumentException;
