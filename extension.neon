@@ -1,6 +1,0 @@
-parameters:
-    stubFiles:
-        - stubs/HxTarget.php
-        - stubs/HxSwap.php
-        - stubs/HtmlTag.php
-        - stubs/HtmlVoidTag.php

@@ -3,7 +3,8 @@
     "description": "HTMX extension for berry/html",
     "type": "library",
     "require": {
-        "berry/html": ">=0.11"
+        "berry/html": ">=0.11",
+        "berry/extension-method-stub-generator": "^0.1.0"
     },
     "require-dev": {
         "pestphp/pest": "^4.2",
@@ -36,14 +37,8 @@
     ],
     "config": {
         "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
-    "extra": {
-        "phpstan": {
-            "includes": [
-                "extension.neon"
-            ]
+            "pestphp/pest-plugin": true,
+            "berry/extension-method-stub-generator": true
         }
     }
 }
