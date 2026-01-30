@@ -3,10 +3,10 @@
     "description": "HTMX extension for berry/html",
     "type": "library",
     "require": {
-        "berry/html": ">=0.11"
+        "berry/html": ">=0.11",
+        "berry/extension-method-stub-generator": ">=0.2"
     },
     "require-dev": {
-        "berry/extension-method-stub-generator": ">=0.2",
         "pestphp/pest": "^4.2",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-deprecation-rules": "^2.0"
