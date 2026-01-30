@@ -4,10 +4,7 @@ namespace Berry\Htmx;
 
 use Berry\Html\HtmlTag;
 use Berry\Html\HtmlVoidTag;
-use ArgumentCountError;
 use Closure;
-use InvalidArgumentException;
-use Stringable;
 
 final readonly class BerryHtmx
 {
@@ -56,54 +53,6 @@ final readonly class BerryHtmx
         }
     }
 
-    /**
-     * @param mixed[] $args
-     */
-    private static function assertArgsCount(string $name, array $args, int $count): void
-    {
-        if (($actual = count($args)) != $count) {
-            throw new ArgumentCountError("Expected $name to take $count arguments but got $actual instead");
-        }
-    }
-
-    /**
-     * @param mixed[] $args
-     */
-    private static function assertString(string $name, array $args, int $index): string
-    {
-        $value = $args[$index];
-
-        if ($value instanceof Stringable) {
-            $value = (string) $value;
-        }
-
-        if (is_bool($value)) {
-            $value = $value ? 'true' : 'false';
-        }
-
-        if (!is_string($value)) {
-            $type = gettype($value);
-            throw new InvalidArgumentException("Expected argument $index of $name to be of type string, found $type instead.");
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param mixed[] $args
-     */
-    private static function assertBool(string $name, array $args, int $index): bool
-    {
-        $value = $args[$index];
-
-        if (!is_bool($value)) {
-            $type = gettype($value);
-            throw new InvalidArgumentException("Expected argument $index of $name to be of type boolean, found $type instead.");
-        }
-
-        return $value;
-    }
-
     private static function hxGet(): Closure
     {
         return self::requestMethod('hx-get');
@@ -131,38 +80,29 @@ final readonly class BerryHtmx
 
     private static function requestMethod(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args) use ($attr): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount($attr, $args, 1);
-            $url = static::assertString($attr, $args, 0);
+        return function (HtmlTag|HtmlVoidTag $node, string $url) use ($attr): HtmlTag|HtmlVoidTag {
             return $node->attr($attr, $url);
         };
     }
 
     private static function hxOn(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount('hx-on', $args, 2);
-            $event = static::assertString('hx-on', $args, 0);
-            $js = static::assertString('hx-on', $args, 1);
+        return function (HtmlTag|HtmlVoidTag $node, string $event, string $js): HtmlTag|HtmlVoidTag {
             return $node->attr("hx-on:$event", $js);
         };
     }
 
     private static function simpleBool(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args) use ($attr): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount($attr, $args, 1);
-            $val = static::assertBool($attr, $args, 0);
-            return $node->attr($attr, $val ? 'true' : 'false');
+        return function (HtmlTag|HtmlVoidTag $node, bool $value) use ($attr): HtmlTag|HtmlVoidTag {
+            return $node->attr($attr, $value ? 'true' : 'false');
         };
     }
 
     private static function simpleString(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args) use ($attr): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount($attr, $args, 1);
-            $val = static::assertString($attr, $args, 0);
-            return $node->attr($attr, $val);
+        return function (HtmlTag|HtmlVoidTag $node, string $string) use ($attr): HtmlTag|HtmlVoidTag {
+            return $node->attr($attr, $string);
         };
     }
 
@@ -305,30 +245,22 @@ final readonly class BerryHtmx
 
     private static function hxTarget(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount('hx-target', $args, 1);
-            $val = $args[0];
-
+        return function (HtmlTag|HtmlVoidTag $node, HxTarget|string $val): HtmlTag|HtmlVoidTag {
             if ($val instanceof HxTarget) {
                 $val = $val->value;
             }
 
-            $val = static::assertString('hx-target', [$val], 0);
             return $node->attr('hx-target', $val);
         };
     }
 
     private static function hxSwap(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, mixed ...$args): HtmlTag|HtmlVoidTag {
-            static::assertArgsCount('hx-swap', $args, 1);
-            $val = $args[0];
-
+        return function (HtmlTag|HtmlVoidTag $node, HxSwap|string $val): HtmlTag|HtmlVoidTag {
             if ($val instanceof HxSwap) {
                 $val = $val->value;
             }
 
-            $val = static::assertString('hx-swap', [$val], 0);
             return $node->attr('hx-swap', $val);
         };
     }
