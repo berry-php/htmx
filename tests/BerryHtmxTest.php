@@ -115,3 +115,7 @@ test('hx-swap-oob and hx-select-oob', function () {
     expect(div()->hxSwapOob('true')->toString())->toBe('<div hx-swap-oob="true"></div>');
     expect(div()->hxSelectOob('#id')->toString())->toBe('<div hx-select-oob="#id"></div>');
 });
+
+test('Regression: hxSwapOob should allow bool', function () {
+    expect(div()->hxSwapOob(true)->toString())->toBe('<div hx-swap-oob="true"></div>');
+});

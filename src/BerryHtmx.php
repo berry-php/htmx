@@ -5,6 +5,7 @@ namespace Berry\Htmx;
 use Berry\Html\HtmlTag;
 use Berry\Html\HtmlVoidTag;
 use Closure;
+use Stringable;
 
 final readonly class BerryHtmx
 {
@@ -101,8 +102,11 @@ final readonly class BerryHtmx
 
     private static function simpleString(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, string $string) use ($attr): HtmlTag|HtmlVoidTag {
-            return $node->attr($attr, $string);
+        return function (HtmlTag|HtmlVoidTag $node, bool|float|int|string|Stringable|null $string) use ($attr): HtmlTag|HtmlVoidTag {
+            if (is_bool($string)) {
+                $string = $string ? 'true' : 'false';
+            }
+            return $node->attr($attr, strval($string));
         };
     }
 
