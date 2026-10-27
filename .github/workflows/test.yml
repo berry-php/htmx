@@ -34,6 +34,9 @@ jobs:
       - name: Run Mago lint
         run: ./vendor/bin/mago lint
 
+      - name: Run Mago analyse
+        run: ./vendor/bin/mago analyse
+
       - name: Run PHPStan
         run: ./vendor/bin/phpstan analyse
 
