@@ -67,14 +67,106 @@
                     ]
                 },
                 {
-                    "name": "hxBoost",
-                    "doc": "Enables progressive enhancement",
+                    "name": "hxQuery",
+                    "doc": "Issues a QUERY request to the specified URL",
                     "returns": "static",
                     "args": [
                         {
-                            "type": "bool",
-                            "name": "value"
+                            "type": "string",
+                            "name": "url"
                         }
+                    ]
+                },
+                {
+                    "name": "hxAction",
+                    "doc": "Request URL, paired with hxMethod",
+                    "returns": "static",
+                    "args": [
+                        { "type": "string", "name": "string" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxMethod",
+                    "doc": "HTTP method, paired with hxAction",
+                    "returns": "static",
+                    "args": [
+                        { "type": "string", "name": "string" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxConfig",
+                    "doc": "Request configuration as HCON or JSON",
+                    "returns": "static",
+                    "args": [
+                        { "type": "string", "name": "string" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxStatus",
+                    "doc": "Response overrides for a status code or pattern such as 4xx",
+                    "returns": "static",
+                    "args": [
+                        { "type": "int|string", "name": "code" },
+                        { "type": "string", "name": "config" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxIgnore",
+                    "doc": "Disables htmx processing on this element and its descendants",
+                    "returns": "static",
+                    "args": []
+                },
+                {
+                    "name": "hxMorphSkip",
+                    "doc": "Leaves an element and its children untouched during morph swaps",
+                    "returns": "static",
+                    "args": []
+                },
+                {
+                    "name": "hxMorphSkipChildren",
+                    "doc": "Morphs attributes but leaves children untouched",
+                    "returns": "static",
+                    "args": []
+                },
+                {
+                    "name": "hxBoost",
+                    "doc": "Enables progressive enhancement (boolean or HCON options)",
+                    "returns": "static",
+                    "args": [
+                        { "type": "bool|string", "name": "value" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxPreload",
+                    "doc": "Prefetch trigger; requires the preload extension",
+                    "returns": "static",
+                    "args": [
+                        { "type": "string", "name": "string" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
+                },
+                {
+                    "name": "hxPending",
+                    "doc": "Pending content selector; requires the hx-pending extension",
+                    "returns": "static",
+                    "args": [
+                        {
+                            "type": "string",
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -84,15 +176,21 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "message"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxDisable",
-                    "doc": "Disables HTMX processing on this element and its children",
+                    "doc": "Disables selected elements while a request is in flight; use hxIgnore to disable processing",
                     "returns": "static",
-                    "args": []
+                    "args": [
+                        { "type": "string", "name": "selector" },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
+                    ]
                 },
                 {
                     "name": "hxEncoding",
@@ -101,30 +199,36 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "type"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxExt",
-                    "doc": "Extensions to include (comma-separated)",
+                    "doc": "Deprecated: Load extension scripts directly instead. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "extensions"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxHistory",
-                    "doc": "Prevents history snapshot for this element",
+                    "doc": "Deprecated: History restoration refetches pages; remove this attribute. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "bool",
-                            "name": "history"
-                        }
+                            "name": "value"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -134,8 +238,10 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "selector"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -145,19 +251,23 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "selector"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxParams",
-                    "doc": "Filters parameters sent with requests",
+                    "doc": "Deprecated: Filter parameters in the htmx:config:request event instead. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "filter"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -168,13 +278,15 @@
                 },
                 {
                     "name": "hxPrompt",
-                    "doc": "Shows a prompt() before issuing requests",
+                    "doc": "Shows a prompt() before requests; requires the hx-prompt extension",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "message"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -184,8 +296,10 @@
                     "args": [
                         {
                             "type": "string|bool",
-                            "name": "url"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -195,19 +309,23 @@
                     "args": [
                         {
                             "type": "string|bool",
-                            "name": "url"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxRequest",
-                    "doc": "Configures requests (JSON string)",
+                    "doc": "Deprecated: Use hxConfig instead. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "config"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -217,8 +335,10 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "selector"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -228,8 +348,10 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "values"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -239,8 +361,10 @@
                     "args": [
                         {
                             "type": "string|bool",
-                            "name": "swap"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -250,8 +374,10 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "strategy"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -261,8 +387,10 @@
                     "args": [
                         {
                             "type": "HxTarget|string",
-                            "name": "target"
-                        }
+                            "name": "val"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -272,8 +400,10 @@
                     "args": [
                         {
                             "type": "string",
-                            "name": "spec"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -283,30 +413,36 @@
                     "args": [
                         {
                             "type": "bool",
-                            "name": "true"
-                        }
+                            "name": "value"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxVals",
-                    "doc": "Adds extra values to requests (JSON)",
+                    "doc": "Adds extra values to requests (HCON or JSON)",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "json"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxHeaders",
-                    "doc": "Adds extra headers (JSON)",
+                    "doc": "Adds extra headers (HCON or JSON)",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "json"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
@@ -316,52 +452,60 @@
                     "args": [
                         {
                             "type": "HxSwap|string",
-                            "name": "strategy"
-                        }
+                            "name": "val"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxDisinherit",
-                    "doc": "Prevents inheriting specified attributes",
+                    "doc": "Deprecated: Inheritance is explicit; local attributes override inherited values. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "attrs"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxInherit",
-                    "doc": "Forces inheritance of specified attributes",
+                    "doc": "Deprecated: Pass inherited: true to individual helpers instead. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "attrs"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxHistoryElt",
-                    "doc": "Marks element as the one saved to history",
+                    "doc": "Marks the history restoration target",
                     "returns": "static",
                     "args": []
                 },
                 {
                     "name": "hxDisabledElt",
-                    "doc": "Adds the disabled attribute to the specified elements while a request is in flight",
+                    "doc": "Deprecated: Use hxDisable instead. Will be removed with 0.6.",
                     "returns": "static",
                     "args": [
                         {
                             "type": "string",
-                            "name": "selector"
-                        }
+                            "name": "string"
+                        },
+                        { "type": "bool", "name": "inherited", "defaultValue": "false" },
+                        { "type": "bool", "name": "append", "defaultValue": "false" }
                     ]
                 },
                 {
                     "name": "hxOn",
-                    "doc": "Handles any event with inline script (uses hx-on:* syntax)",
+                    "doc": "Inline event handler; omit js for extended hx-on syntax",
                     "returns": "static",
                     "args": [
                         {
@@ -369,8 +513,9 @@
                             "name": "event"
                         },
                         {
-                            "type": "string",
-                            "name": "js"
+                            "type": "?string",
+                            "name": "js",
+                            "defaultValue": "null"
                         }
                     ]
                 }

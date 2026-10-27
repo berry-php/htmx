@@ -1,10 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Berry\Htmx;
 
 use Berry\Html\HtmlTag;
 use Berry\Html\HtmlVoidTag;
 use Closure;
+use Deprecated;
 use Stringable;
 
 final readonly class BerryHtmx
@@ -17,6 +20,16 @@ final readonly class BerryHtmx
             'hxPut' => static::hxPut(),
             'hxPatch' => static::hxPatch(),
             'hxDelete' => static::hxDelete(),
+            'hxQuery' => static::hxQuery(),
+            'hxAction' => static::hxAction(),
+            'hxMethod' => static::hxMethod(),
+            'hxConfig' => static::hxConfig(),
+            'hxStatus' => static::hxStatus(),
+            'hxIgnore' => static::hxIgnore(),
+            'hxMorphSkip' => static::hxMorphSkip(),
+            'hxMorphSkipChildren' => static::hxMorphSkipChildren(),
+            'hxPreload' => static::hxPreload(),
+            'hxPending' => static::hxPending(),
             'hxOn' => static::hxOn(),
             'hxBoost' => static::hxBoost(),
             'hxConfirm' => static::hxConfirm(),
@@ -81,38 +94,135 @@ final readonly class BerryHtmx
 
     private static function requestMethod(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, string $url) use ($attr): HtmlTag|HtmlVoidTag {
-            return $node->attr($attr, $url);
-        };
+        return static fn(HtmlTag|HtmlVoidTag $node, string $url): HtmlTag|HtmlVoidTag => $node->attr($attr, $url);
+    }
+
+    private static function hxQuery(): Closure
+    {
+        return self::requestMethod('hx-query');
+    }
+
+    private static function hxAction(): Closure
+    {
+        return self::simpleString('hx-action');
+    }
+
+    private static function hxMethod(): Closure
+    {
+        return self::simpleString('hx-method');
+    }
+
+    private static function hxConfig(): Closure
+    {
+        return self::simpleString('hx-config');
+    }
+
+    private static function hxStatus(): Closure
+    {
+        return static fn(
+            HtmlTag|HtmlVoidTag $node,
+            int|string $code,
+            string $config,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $node->attr(self::attributeName("hx-status:{$code}", $inherited, $append), $config);
+    }
+
+    private static function hxIgnore(): Closure
+    {
+        return self::simpleFlag('hx-ignore');
+    }
+
+    private static function hxMorphSkip(): Closure
+    {
+        return self::simpleFlag('hx-morph-skip');
+    }
+
+    private static function hxMorphSkipChildren(): Closure
+    {
+        return self::simpleFlag('hx-morph-skip-children');
+    }
+
+    private static function hxPreload(): Closure
+    {
+        return self::simpleString('hx-preload');
+    }
+
+    private static function hxPending(): Closure
+    {
+        return self::simpleString('hx-pending');
     }
 
     private static function hxOn(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, string $event, string $js): HtmlTag|HtmlVoidTag {
-            return $node->attr("hx-on:$event", $js);
-        };
+        return static fn(HtmlTag|HtmlVoidTag $node, string $event, ?string $js = null): HtmlTag|HtmlVoidTag => $js
+            === null
+                ? $node->attr('hx-on', $event)
+                : $node->attr("hx-on:{$event}", $js);
     }
 
     private static function simpleBool(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, bool $value) use ($attr): HtmlTag|HtmlVoidTag {
-            return $node->attr($attr, $value ? 'true' : 'false');
-        };
+        return static fn(
+            HtmlTag|HtmlVoidTag $node,
+            bool $value,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $node->attr(
+            self::attributeName($attr, $inherited, $append),
+            $value ? 'true' : 'false',
+        );
     }
 
+    /**
+     * @return Closure(HtmlTag|HtmlVoidTag, bool|float|int|string|Stringable|null, bool=, bool=): (HtmlTag|HtmlVoidTag)
+     */
     private static function simpleString(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, bool|float|int|string|Stringable|null $string) use ($attr): HtmlTag|HtmlVoidTag {
+        return static function (
+            HtmlTag|HtmlVoidTag $node,
+            bool|float|int|string|Stringable|null $string,
+            bool $inherited = false,
+            bool $append = false,
+        ) use ($attr): HtmlTag|HtmlVoidTag {
             if (is_bool($string)) {
                 $string = $string ? 'true' : 'false';
             }
-            return $node->attr($attr, strval($string));
+            return $node->attr(self::attributeName($attr, $inherited, $append), strval($string));
         };
+    }
+
+    private static function deprecatedString(string $attr): Closure
+    {
+        $method = self::simpleString($attr);
+
+        return #[Deprecated(
+            "This attribute is obsolete; see the helper documentation for alternatives.\nWill be removed with 0.6.",
+        )]
+        static fn(
+            HtmlTag|HtmlVoidTag $node,
+            bool|float|int|string|Stringable|null $string,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $method($node, $string, $inherited, $append);
+    }
+
+    private static function attributeName(string $attr, bool $inherited, bool $append): string
+    {
+        return $attr . ($inherited ? ':inherited' : '') . ($append ? ':append' : '');
     }
 
     private static function hxBoost(): Closure
     {
-        return self::simpleBool('hx-boost');
+        return static fn(
+            HtmlTag|HtmlVoidTag $node,
+            bool|string $value,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $node->attr(
+            self::attributeName('hx-boost', $inherited, $append),
+            is_bool($value) ? ($value ? 'true' : 'false') : $value,
+        );
     }
 
     private static function hxConfirm(): Closure
@@ -127,7 +237,7 @@ final readonly class BerryHtmx
 
     private static function hxExt(): Closure
     {
-        return self::simpleString('hx-ext');
+        return self::deprecatedString('hx-ext');
     }
 
     private static function hxInclude(): Closure
@@ -142,7 +252,7 @@ final readonly class BerryHtmx
 
     private static function hxParams(): Closure
     {
-        return self::simpleString('hx-params');
+        return self::deprecatedString('hx-params');
     }
 
     private static function hxPreserve(): Closure
@@ -167,7 +277,7 @@ final readonly class BerryHtmx
 
     private static function hxRequest(): Closure
     {
-        return self::simpleString('hx-request');
+        return self::deprecatedString('hx-request');
     }
 
     private static function hxSelect(): Closure
@@ -212,12 +322,12 @@ final readonly class BerryHtmx
 
     private static function hxDisinherit(): Closure
     {
-        return self::simpleString('hx-disinherit');
+        return self::deprecatedString('hx-disinherit');
     }
 
     private static function hxInherit(): Closure
     {
-        return self::simpleString('hx-inherit');
+        return self::deprecatedString('hx-inherit');
     }
 
     private static function hxHistoryElt(): Closure
@@ -227,45 +337,67 @@ final readonly class BerryHtmx
 
     private static function hxDisabledElt(): Closure
     {
-        return self::simpleString('hx-disabled-elt');
+        return self::deprecatedString('hx-disabled-elt');
     }
 
     private static function simpleFlag(string $attr): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node) use ($attr): HtmlTag|HtmlVoidTag {
-            return $node->flag($attr);
-        };
+        return static fn(HtmlTag|HtmlVoidTag $node): HtmlTag|HtmlVoidTag => $node->flag($attr);
     }
 
     private static function hxDisable(): Closure
     {
-        return self::simpleFlag('hx-disable');
+        return static fn(
+            HtmlTag|HtmlVoidTag $node,
+            string $selector,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $node->attr(self::attributeName('hx-disable', $inherited, $append), $selector);
     }
 
     private static function hxHistory(): Closure
     {
-        return self::simpleBool('hx-history');
+        return #[Deprecated("History restoration refetches pages; remove this attribute.\nWill be removed with 0.6.")]
+        static fn(
+            HtmlTag|HtmlVoidTag $node,
+            bool $value,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag => $node->attr(
+            self::attributeName('hx-history', $inherited, $append),
+            $value ? 'true' : 'false',
+        );
     }
 
     private static function hxTarget(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, HxTarget|string $val): HtmlTag|HtmlVoidTag {
+        return static function (
+            HtmlTag|HtmlVoidTag $node,
+            HxTarget|string $val,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag {
             if ($val instanceof HxTarget) {
                 $val = $val->value;
             }
 
-            return $node->attr('hx-target', $val);
+            return $node->attr(self::attributeName('hx-target', $inherited, $append), $val);
         };
     }
 
     private static function hxSwap(): Closure
     {
-        return function (HtmlTag|HtmlVoidTag $node, HxSwap|string $val): HtmlTag|HtmlVoidTag {
+        return static function (
+            HtmlTag|HtmlVoidTag $node,
+            HxSwap|string $val,
+            bool $inherited = false,
+            bool $append = false,
+        ): HtmlTag|HtmlVoidTag {
             if ($val instanceof HxSwap) {
                 $val = $val->value;
             }
 
-            return $node->attr('hx-swap', $val);
+            return $node->attr(self::attributeName('hx-swap', $inherited, $append), $val);
         };
     }
 }

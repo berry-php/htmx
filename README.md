@@ -1,6 +1,6 @@
 # Berry HTMX
 
-HTMX extension for [berry/html](https://github.com/atomicptr/berry)
+[HTMX](https://htmx.org) (v4) extension for [berry/html](https://github.com/atomicptr/berry)
 
 ## Usage
 
